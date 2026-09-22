@@ -1,0 +1,7 @@
+import Image from 'next/image'
+import Link from 'next/link'
+import { ArrowRight } from 'lucide-react'
+import { PageShell, Reviews, SectionCta } from '@/components/site'
+import { imageRoot } from '@/lib/site-data'
+const posts=[['How many porta potties does my event need?','A simple guest-count guide for planning a comfortable event in Palm Beach County.','event-porta-potty-rentals.jpg'],['What to know before renting a jobsite toilet','The practical checklist contractors use to plan placement, service, and access.','job-site-portable-restroom.jpg'],['Portable restroom planning for Florida heat','Small details that help guests and crews stay comfortable in South Florida weather.','outdoor-porta-potties.jpg']]
+export default function Blog(){return <PageShell><section className="page-hero"><span className="eyebrow">The Restroom Logistics journal</span><h1>Helpful answers for better planning.</h1><p>Practical, people-first advice for events, construction sites, and property projects.</p></section><section className="section"><div className="blog-grid">{posts.map(([title,desc,img])=><article className="blog-card" key={title}><div className="blog-image"><Image src={imageRoot+img} alt={title} fill sizes="33vw"/></div><div><span className="eyebrow">Planning guide</span><h3>{title}</h3><p>{desc}</p><Link href="/blog/portable-restroom-planning" className="text-link">Read guide <ArrowRight size={16}/></Link></div></article>)}</div></section><Reviews/><SectionCta/></PageShell>}
