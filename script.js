@@ -4,27 +4,30 @@
   const initMobileMenu = () => {
     const menuToggle = document.querySelector('.menu-toggle');
     const mainNav = document.querySelector('#site-menu');
+    const overlay = document.querySelector('.menu-overlay');
 
     if (!menuToggle || !mainNav) return;
 
-    const navLinks = mainNav.querySelectorAll('a');
     const menuLines = menuToggle.querySelectorAll('span');
+    const navLinks = mainNav.querySelectorAll('a');
 
     const setMenuState = (open) => {
       mainNav.classList.toggle('is-open', open);
+      overlay?.classList.toggle('is-open', open);
+      document.body.classList.toggle('menu-is-open', open);
       menuToggle.setAttribute('aria-expanded', String(open));
       menuToggle.setAttribute('aria-label', open ? 'Close navigation' : 'Open navigation');
-      document.body.classList.toggle('menu-is-open', open);
 
       menuLines.forEach((line, index) => {
-        line.style.transform = open
-          ? index === 0
-            ? 'translateY(7px) rotate(45deg)'
-            : index === 2
-              ? 'translateY(-7px) rotate(-45deg)'
-              : 'none'
-          : 'none';
-        line.style.opacity = open && index === 1 ? '0' : '1';
+        if (!open) {
+          line.style.transform = 'none';
+          line.style.opacity = '1';
+          return;
+        }
+
+        if (index === 0) line.style.transform = 'translateY(7px) rotate(45deg)';
+        if (index === 1) line.style.opacity = '0';
+        if (index === 2) line.style.transform = 'translateY(-7px) rotate(-45deg)';
       });
     };
 
@@ -38,12 +41,13 @@
       link.addEventListener('click', () => setMenuState(false));
     });
 
+    overlay?.addEventListener('click', () => setMenuState(false));
+
     document.addEventListener('click', (event) => {
-      if (
-        mainNav.classList.contains('is-open') &&
-        !mainNav.contains(event.target) &&
-        !menuToggle.contains(event.target)
-      ) {
+      const clickedOnToggle = menuToggle.contains(event.target);
+      const clickedInsideNav = mainNav.contains(event.target);
+
+      if (mainNav.classList.contains('is-open') && !clickedOnToggle && !clickedInsideNav) {
         setMenuState(false);
       }
     });
